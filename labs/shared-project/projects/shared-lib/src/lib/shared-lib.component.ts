@@ -4,16 +4,17 @@ import { Component, OnInit } from '@angular/core';
   selector: 'lib-shared-lib',
   template: `
     <p>
-      shared-lib works really well!
+      shared-lib works!
     </p>
   `,
-  styles: []
+  styles: [
+  ]
 })
 export class SharedLibComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }

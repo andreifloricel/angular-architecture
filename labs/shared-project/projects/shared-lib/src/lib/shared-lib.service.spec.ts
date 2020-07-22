@@ -3,10 +3,14 @@ import { TestBed } from '@angular/core/testing';
 import { SharedLibService } from './shared-lib.service';
 
 describe('SharedLibService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: SharedLibService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(SharedLibService);
+  });
 
   it('should be created', () => {
-    const service: SharedLibService = TestBed.get(SharedLibService);
     expect(service).toBeTruthy();
   });
 });
