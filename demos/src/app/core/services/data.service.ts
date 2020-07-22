@@ -1,16 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { Customer } from 'app/app.model';
+import { Event, EventBusService } from 'app/core/services/event-bus.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DataService {
+export class DataService implements OnDestroy {
+  private eventbusSub: Subscription;
+
   private customersSubject$ = new BehaviorSubject<Customer[]>(
     this.getCustomersMockData()
   );
   customer$ = this.customersSubject$.asObservable();
+
+  constructor(private eventbus: EventBusService) {
+    this.eventbusSub = this.eventbus.on(Event.CustomerCreationRequested, () => {
+      this.addCustomer();
+    });
+  }
+
+  // did you know that ngOnDestroy is called when a directive, pipe, or SERVICE is destroyed ?
+  ngOnDestroy(): void {
+    this.eventbusSub.unsubscribe();
+  }
 
   addCustomer(): void {
     const existingCustomers = this.customersSubject$.getValue();

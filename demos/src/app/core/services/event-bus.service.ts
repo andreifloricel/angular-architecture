@@ -6,26 +6,39 @@ import { filter, map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class EventBusService {
-  private subject$ = new Subject();
+  private eventBusSubject$ = new Subject();
 
   on(event: Event, action: any): Subscription {
-    return this.subject$
+    return this.eventBusSubject$
       .pipe(
         filter((e: EmitEvent) => e.name === event),
-        map((e: EmitEvent) => e.value)
+        map((e: EmitEvent) => e.payload)
       )
       .subscribe(action);
   }
 
   emit(event: EmitEvent) {
-    this.subject$.next(event);
+    this.eventBusSubject$.next(event);
+  }
+
+  // only for didactical purposes, the on() method with provided callback is recommended
+  subscribeToEvent(event: Event): Observable<any> {
+    return this.eventBusSubject$.pipe(
+      filter((e: EmitEvent) => e.name === event),
+      map((e: EmitEvent) => e.payload)
+    );
   }
 }
 
 export class EmitEvent {
-  constructor(public name: Event, public value?: any) {}
+  constructor(public name: Event, public payload?: any) {}
 }
 
 export enum Event {
   CustomerSelected,
+  CustomerCreationRequested,
+  // what about alternative names?
+  // CustomerCreated
+  // or
+  // CreateCustomer
 }

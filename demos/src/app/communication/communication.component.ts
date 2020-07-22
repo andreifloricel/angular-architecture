@@ -1,8 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { DataService } from '../core/services/data.service';
 import { Observable, Subject } from 'rxjs';
 import { Customer } from 'app/app.model';
+import {
+  EmitEvent,
+  Event,
+  EventBusService,
+} from 'app/core/services/event-bus.service';
 
 @Component({
   selector: 'app-communication',
@@ -13,10 +18,18 @@ export class CommunicationComponent implements OnInit, OnDestroy {
   customer: Customer;
   private componentDestroy$ = new Subject();
 
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService,
+    private eventbus: EventBusService
+  ) {}
 
   ngOnInit() {
     this.customer$ = this.dataService.customer$;
+  }
+
+  ngOnDestroy() {
+    this.componentDestroy$.next();
+    this.componentDestroy$.complete();
   }
 
   selected(cust: Customer) {
@@ -24,11 +37,10 @@ export class CommunicationComponent implements OnInit, OnDestroy {
   }
 
   addCustomer() {
-    this.dataService.addCustomer();
-  }
+    // 1. EventBus
+    this.eventbus.emit(new EmitEvent(Event.CustomerCreationRequested));
 
-  ngOnDestroy() {
-    this.componentDestroy$.next();
-    this.componentDestroy$.complete();
+    // 2. Observable Service
+    // this.dataService.addCustomer();
   }
 }

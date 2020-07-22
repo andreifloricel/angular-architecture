@@ -22,19 +22,32 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // Example of using an event bus to provide loosely coupled communication (mediator pattern)
-    this.eventbusSub = this.eventbus.on(
-      Event.CustomerSelected,
-      (cust) => (this.customer = cust)
-    );
-
-    // Example of using BehaviorSubject to be notified when a service changes
-    this.customerNumber$ = this.dataService.customer$.pipe(
-      map((customers) => customers.length)
-    );
+    this.setupEventbus();
+    this.setupObservableService();
   }
 
   ngOnDestroy() {
     this.eventbusSub.unsubscribe();
+  }
+
+  // Example of using an event bus to provide loosely coupled communication (mediator pattern)
+  private setupEventbus() {
+    // verbose version
+    this.eventbusSub = this.eventbus
+      .subscribeToEvent(Event.CustomerSelected)
+      .subscribe((cust) => (this.customer = cust));
+
+    /*// clean version with callback
+    this.eventbusSub = this.eventbus.on(
+      Event.CustomerSelected,
+      (cust) => (this.customer = cust)
+    );*/
+  }
+
+  // Example of using BehaviorSubject to be notified when a service changes
+  private setupObservableService() {
+    this.customerNumber$ = this.dataService.customer$.pipe(
+      map((customers) => customers.length)
+    );
   }
 }

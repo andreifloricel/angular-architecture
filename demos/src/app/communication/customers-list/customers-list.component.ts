@@ -26,14 +26,14 @@ export class CustomersListComponent {
 
   constructor(private eventbus: EventBusService) {}
 
-  selectCustomer(cust: Customer) {
+  selectCustomer(customer: Customer) {
     // send to parent via output property
     // note: could use eventbus as well if desired but output property
     // would be the preferred method for passing data to am immediate parent
     // or NOT !?
-    this.customerSelected.emit(cust);
+    this.customerSelected.emit(customer);
 
     // Send customer to any eventbus listeners listening for the CustomerSelected event
-    this.eventbus.emit(new EmitEvent(Event.CustomerSelected, cust));
+    this.eventbus.emit(new EmitEvent(Event.CustomerSelected, customer));
   }
 }
