@@ -4,13 +4,12 @@ import { CommunicationRoutingModule } from './communication-routing.module';
 import { CustomersListComponent } from './customers-list/customers-list.component';
 import { CustomerDetailsComponent } from './customer-details/customer-details.component';
 
-
-
 @NgModule({
-  imports: [
-    CommonModule,
-    CommunicationRoutingModule  
+  imports: [CommonModule, CommunicationRoutingModule],
+  declarations: [
+    CommunicationRoutingModule.components,
+    CustomersListComponent,
+    CustomerDetailsComponent,
   ],
-  declarations: [ CommunicationRoutingModule.components, CustomersListComponent, CustomerDetailsComponent ]
 })
-export class CommunicationModule { }
+export class CommunicationModule {}

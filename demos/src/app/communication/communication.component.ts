@@ -1,42 +1,34 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { Customer } from '../shared/interfaces';
 import { DataService } from '../core/services/data.service';
-import { SubSink } from 'subsink';
+import { Observable, Subject } from 'rxjs';
+import { Customer } from 'app/app.model';
 
 @Component({
   selector: 'app-communication',
-  templateUrl: './communication.component.html'
+  templateUrl: './communication.component.html',
 })
 export class CommunicationComponent implements OnInit, OnDestroy {
-
-  customers: Customer[] = [];
+  customer$: Observable<Customer[]>;
   customer: Customer;
-  private subs = new SubSink();
+  private componentDestroy$ = new Subject();
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService) {}
 
   ngOnInit() {
-    this.subs.sink = this.dataService.getCustomers()
-        .subscribe((custs: Customer[]) => this.customers = custs);
+    this.customer$ = this.dataService.customer$;
   }
 
   selected(cust: Customer) {
     this.customer = cust;
   }
 
-  addCustomerPush() {
-    this.dataService.addCustomer()
-        .subscribe((custs: Customer[]) => this.customers = custs);
-  }
-
-  addCustomerClone() {
-    this.dataService.addCustomerClone()
-        .subscribe((custs: Customer[]) => this.customers = custs);
+  addCustomer() {
+    this.dataService.addCustomer();
   }
 
   ngOnDestroy() {
-    this.subs.unsubscribe();
+    this.componentDestroy$.next();
+    this.componentDestroy$.complete();
   }
-
 }

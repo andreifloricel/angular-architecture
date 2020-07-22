@@ -1,16 +1,16 @@
 main {
-	margin-left: 25px;
-	width: 92%;
+  margin-left: 25px;
+  width: 92%;
 }
 
 form {
-	width:50%;
+  width: 50%;
 }
 
 .logo {
-	height: 50px;
-	margin-left: 20px;
-	margin-right: 20px;
+  height: 50px;
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 /* input.ng-invalid, select.ng-invalid {
